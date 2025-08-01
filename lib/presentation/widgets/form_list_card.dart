@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:survey_craft/config/constants/text_styles.dart';
 
 class FormCard extends StatelessWidget {
   final String title;
-  final String imageUrl;
+  final Icon icon;
   final VoidCallback onTap;
 
   const FormCard({
     super.key,
     required this.title,
-    required this.imageUrl,
+    required this.icon,
     required this.onTap,
   });
 
@@ -21,27 +23,24 @@ class FormCard extends StatelessWidget {
         elevation: 4,
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: SizedBox(
-          height: 160,
-          child: Row(
+          // height: 160,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16), bottomLeft: Radius.circular(16)),
-                child: Image.asset(
-                  imageUrl,
-                  width: 120,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
+              Container(
+                height: 70.h,
+                width: 70.h, // use height to keep it perfectly circular
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
                 ),
+                child: Center(child: icon),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
+              Text(
+                textAlign: TextAlign.center,
+                title,
+                style: AppTextStyles.body
               )
             ],
           ),
