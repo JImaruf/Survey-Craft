@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:survey_craft/config/constants/text_styles.dart';
 import 'package:survey_craft/presentation/pages/form_list.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,18 +27,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.assignment, size: 80, color: Colors.teal),
-            SizedBox(height: 20),
+            Icon(Icons.assignment, size: 80.sp, color: Colors.teal),
+            SizedBox(height: 20.h),
             Text(
               'SurveyCraft',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.teal,
-              ),
+              style: AppTextStyles.title
             ),
-            SizedBox(height: 10),
-            Text('Loading...', style: TextStyle(color: Colors.grey)),
+            SizedBox(height: 10.h),
+            Text('Loading...', style: AppTextStyles.caption),
           ],
         ),
       ),
