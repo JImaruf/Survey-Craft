@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:survey_craft/config/constants/app_colors.dart';
 import 'package:survey_craft/config/constants/text_styles.dart';
 
 class FormCard extends StatelessWidget {
@@ -32,7 +33,7 @@ class FormCard extends StatelessWidget {
                 height: 70.h,
                 width: 70.h, // use height to keep it perfectly circular
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: AppColors.secondary,
                   shape: BoxShape.circle,
                 ),
                 child: Center(child: icon),
