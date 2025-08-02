@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:survey_craft/logic/bloc/form_list_page/form_list_bloc.dart';
 import 'package:survey_craft/logic/bloc/form_page/form_page_bloc.dart';
 import 'package:survey_craft/presentation/pages/splash_screen.dart';
 
-void main() {
+import 'core/utils/hive_constants.dart';
+
+Future<void> main() async {
+  await Hive.initFlutter();
+  await OpenBoxes().openBox();
   runApp(const MyApp());
 }
 

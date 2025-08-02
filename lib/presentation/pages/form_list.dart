@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_craft/logic/bloc/form_list_page/form_list_bloc.dart';
 import 'package:survey_craft/logic/bloc/form_list_page/form_list_event.dart';
 import 'package:survey_craft/logic/bloc/form_list_page/form_list_state.dart';
+import 'package:survey_craft/logic/bloc/form_page/form_page_bloc.dart';
+import 'package:survey_craft/logic/bloc/form_page/form_page_event.dart';
 import 'package:survey_craft/presentation/pages/form_page.dart';
+import 'package:survey_craft/presentation/pages/show_saved_list.dart';
 import 'package:survey_craft/presentation/widgets/custom_app_bar.dart';
 
 import '../../config/constants/app_colors.dart';
@@ -30,16 +33,28 @@ class FormList extends StatelessWidget {
                   }
                 else if(state is FormLoadedState)
                   {
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
-                      itemCount: state.formsList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return FormCard(icon: Icon(Icons.assignment,color: AppColors.white,), onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => FormPage(form: state.formsList[index]),));
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
+                            itemCount: state.formsList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return FormCard(icon: Icon(Icons.assignment,color: AppColors.white,), onTap: () {
+                                FormBloc formBloc = FormBloc();
+                                formBloc.add(FetchCurrentFormDataEvent(state.formsList[index]));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => FormPage(form: state.formsList[index], formPageBloc: formBloc,),));
 
-                        }, title: state.formsList[index].formName.toString(),);
-                      },
+                              }, title: state.formsList[index].formName.toString(),);
+                            },
+
+                          ),
+                        ),
+                        ElevatedButton(onPressed: (){
+Navigator.push(context, MaterialPageRoute(builder: (context) => SavedList(),));
+                        }, child: Text("Saved Survey List"))
+                      ],
 
                     );
                   }

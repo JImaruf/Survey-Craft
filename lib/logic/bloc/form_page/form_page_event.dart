@@ -1,6 +1,7 @@
 
 
 import 'package:equatable/equatable.dart';
+import 'package:survey_craft/data/models/form_model.dart';
 
 abstract class FormEvent extends Equatable {
   @override
@@ -15,11 +16,30 @@ class SubmitForm extends FormEvent {
   @override
   List<Object?> get props => [answers];
 }
+class FetchCurrentFormDataEvent extends FormEvent {
+ final FormModel form;
+ FetchCurrentFormDataEvent(this.form);
+  @override
+  List<Object?> get props => [form];
+}
+
 
 class SaveAnswer extends FormEvent {
+  final bool isMultiSelect;
   final String key;
   final dynamic value;
-  SaveAnswer(this.key, this.value);
+  final int sectionIndex;
+  final int fieldIndex;
+  final String answer;
+  SaveAnswer(this.key, this.value,  {required this.isMultiSelect,required this.sectionIndex, required this.fieldIndex,required this.answer,});
   @override
-  List<Object?> get props => [key, value];
+  List<Object?> get props => [key, value,sectionIndex,fieldIndex];
+}
+class SaveCheckListToModel extends FormEvent {
+  final int sectionIndex;
+  final int fieldIndex;
+  final String checkList;
+  SaveCheckListToModel({required this.sectionIndex, required this.fieldIndex,required this.checkList,});
+  @override
+  List<Object?> get props => [sectionIndex,fieldIndex,checkList];
 }

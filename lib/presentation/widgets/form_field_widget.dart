@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,50 +10,66 @@ import '../../logic/bloc/form_page/form_page_bloc.dart';
 import '../../logic/bloc/form_page/form_page_event.dart';
 
 class DynamicFormField extends StatelessWidget {
-  final FieldModel field;
+  final int sectionIndex;
+  final int fieldIndex;
+  final Field field;
+  final bloc;
   File? image;
-  final ImagePicker _picker = ImagePicker();
 
-  DynamicFormField({super.key, required this.field});
+
+  final ImagePicker _picker = ImagePicker();
+  String checkList="";
+  DynamicFormField({super.key, required this.field, required this.bloc, required this.sectionIndex, required this.fieldIndex});
 
   @override
   Widget build(BuildContext context) {
+
     final props = field.properties;
-    final label = props['label'] ?? '';
+    final label = props.label ?? '';
 
     switch (field.id) {
       case 1: // Text field
         return TextFormField(
           decoration: InputDecoration(labelText: label),
-          initialValue: props['defaultValue'],
+          initialValue: props.defaultValue,
           onChanged: (value) =>
-              context.read<FormBloc>().add(SaveAnswer(field.key, value)),
+              bloc.add(SaveAnswer(field.key,isMultiSelect:false,answer: value, value,sectionIndex: sectionIndex,fieldIndex: fieldIndex)),
           validator: (value) {
-            if (props['minLength'] != null &&
-                value!.length < props['minLength']) {
-              return 'Minimum ${props['minLength']} characters required';
+            if (props.minLength != null &&
+                value!.length < props.minLength!) {
+              return 'Minimum ${props.minLength} characters required';
             }
             return null;
           },
         );
 
       case 2: // Dropdown or Multi-select
-        final items = json.decode(props['listItems']) as List;
-        if (props['multiSelect'] == true) {
+        final items = json.decode(props.listItems!) as List;
+        if (props.multiSelect == true) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label),
               ...items.map((item) => BlocBuilder<FormBloc, FormPageState>(
+
+                bloc: bloc,
                 builder: (context, state) {
-                  final value = (state is FormAnswerUpdated)
-                      ? state.answers['${field.key}_${item['value']}'] ?? false
-                      : false;
+                   bool value =false;
+                  if(state is FormAnswerUpdated)
+                    {
+                     value = state.answers['${field.key}_${item['value']}'] ?? false;
+                     if(value)
+                     {
+                       checkList+="${item["name"].toString()},";
+                       log(checkList,name: "now check list");
+                       bloc.add(SaveCheckListToModel(sectionIndex: sectionIndex, fieldIndex: fieldIndex, checkList: checkList));
+                     }
+                    }
+
                   return CheckboxListTile(
                     title: Text(item['name']),
                     value: value,
-                    onChanged: (val) => context.read<FormBloc>().add(
-                        SaveAnswer('${field.key}_${item['value']}', val)),
+                    onChanged: (val) => bloc.add(SaveAnswer('${field.key}_${item['value']}',isMultiSelect:false,answer: checkList, val,fieldIndex: fieldIndex,sectionIndex: sectionIndex)),
                   );
                 },
               ))
@@ -68,7 +85,7 @@ class DynamicFormField extends StatelessWidget {
             ))
                 .toList(),
             onChanged: (val) =>
-                context.read<FormBloc>().add(SaveAnswer(field.key, val)),
+                bloc.add(SaveAnswer(field.key,isMultiSelect:false, val,answer:val.toString(),sectionIndex: sectionIndex,fieldIndex: fieldIndex)),
           );
         }
 
@@ -78,6 +95,7 @@ class DynamicFormField extends StatelessWidget {
           children: [
             Text(label),
             BlocBuilder<FormBloc, FormPageState>(
+              bloc: bloc,
               builder: (context, state) {
                 final current = (state is FormAnswerUpdated)
                     ? state.answers[field.key]
@@ -88,9 +106,7 @@ class DynamicFormField extends StatelessWidget {
                       .map((opt) => ChoiceChip(
                     label: Text(opt),
                     selected: current == opt,
-                    onSelected: (_) => context
-                        .read<FormBloc>()
-                        .add(SaveAnswer(field.key, opt)),
+                    onSelected: (_) => bloc.add(SaveAnswer(field.key,isMultiSelect:false,answer: opt.toString(), opt,fieldIndex: fieldIndex,sectionIndex: sectionIndex)),
                   ))
                       .toList(),
                 );
@@ -104,7 +120,7 @@ class DynamicFormField extends StatelessWidget {
           child: Text(label),
           onPressed: () {
             pickImageFromGallery();
-            //context.read<FormBloc>().add(SaveAnswer(field.key, 'Image Picked'));
+            //bloc.add(SaveAnswer(field.key, 'Image Picked'));
           }
         );
 
