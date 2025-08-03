@@ -28,12 +28,13 @@ class FetchCurrentFormDataEvent extends FormEvent {
 
 class SaveAnswer extends FormEvent {
   final bool isMultiSelect;
+
   final String key;
   final dynamic value;
   final int sectionIndex;
   final int fieldIndex;
   final String answer;
-  SaveAnswer(this.key, this.value,  {required this.isMultiSelect,required this.sectionIndex, required this.fieldIndex,required this.answer,});
+  SaveAnswer(this.key, this.value,   {required this.isMultiSelect,required this.sectionIndex, required this.fieldIndex,required this.answer,});
   @override
   List<Object?> get props => [key, value,sectionIndex,fieldIndex];
 }

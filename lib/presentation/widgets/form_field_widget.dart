@@ -16,8 +16,8 @@ class DynamicFormField extends StatelessWidget {
   final int sectionIndex;
   final int fieldIndex;
   final Field field;
-  final bloc;
-  File? image;
+  final FormBloc bloc;
+
   String? selectedValue;
 
 
@@ -127,6 +127,7 @@ class DynamicFormField extends StatelessWidget {
               }).toList(),
               onChanged: (val) => bloc.add(
                 SaveAnswer(
+                  
                   field.key,
                   isMultiSelect: false,
                   val,
@@ -171,34 +172,50 @@ class DynamicFormField extends StatelessWidget {
           bloc: bloc,
           builder: (context, state) {
             log(state.toString(),name: "alkds");
-            if (state is ImageUpdate) {
+            if (state is FormAnswerUpdated) {
               return InkWell(
                 onTap:() async {
                   await pickImageFromGallery();
-                  if (image != null) {
+                  if (bloc.image != null) {
                     bloc.add(SaveAnswer(field.key, isMultiSelect: false,
-                        answer: image!.absolute.path.toString(),
+                        answer: bloc.image!.absolute.path.toString(),
                         "value",
                         sectionIndex: sectionIndex,
                         fieldIndex: fieldIndex));
-                    bloc.add(SaveCheckImageToModel(image: image!));
+                   // bloc.add(SaveCheckImageToModel(image: image!));
 
                   }
                 },
-                  child: Image.file(state.image));
+                  child: state.image!=null?Image.file(state.image!):CustomButton(
+                      icon: Icons.image,
+                      text: label,
+                      onPressed: () async {
+                        await pickImageFromGallery();
+                        if (bloc.image != null) {
+                          bloc.add(SaveAnswer(field.key, isMultiSelect: false,
+                              answer: bloc.image!.absolute.path.toString(),
+                              "value",
+                              sectionIndex: sectionIndex,
+                              fieldIndex: fieldIndex));
+                          //bloc.add(SaveCheckImageToModel(image: image!));
+
+                        }
+                        //bloc.add(SaveAnswer(field.key, 'Image Picked'));
+                      }
+                  ));
             }
             return CustomButton(
                 icon: Icons.image,
                 text: label,
                 onPressed: () async {
                   await pickImageFromGallery();
-                  if (image != null) {
+                  if (bloc.image != null) {
                     bloc.add(SaveAnswer(field.key, isMultiSelect: false,
-                        answer: image!.absolute.path.toString(),
+                        answer: bloc.image!.absolute.path.toString(),
                         "value",
                         sectionIndex: sectionIndex,
                         fieldIndex: fieldIndex));
-                    bloc.add(SaveCheckImageToModel(image: image!));
+                    //bloc.add(SaveCheckImageToModel(image: image!));
                     
                   }
                   //bloc.add(SaveAnswer(field.key, 'Image Picked'));
@@ -216,7 +233,7 @@ class DynamicFormField extends StatelessWidget {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      image = File(pickedFile.path);
+      bloc.image = File(pickedFile.path);
     }
   }
 

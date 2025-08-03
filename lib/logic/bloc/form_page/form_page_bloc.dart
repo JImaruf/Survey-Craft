@@ -1,5 +1,6 @@
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,9 +12,9 @@ import 'form_page_state.dart';
 class FormBloc extends Bloc<FormEvent, FormPageState> {
   Map<String, dynamic> currentAnswers = {};
    FormModel formModel = FormModel();
+   File? image;
 
   FormBloc() : super(FormInitial()) {
-    // on<LoadForms>(_onLoadForms);
     on<SubmitForm>(_onSubmitForm);
     on<SaveAnswer>(_onSaveAnswer);
     on<FetchCurrentFormDataEvent>(_loadCurrentForm);
@@ -22,50 +23,20 @@ class FormBloc extends Bloc<FormEvent, FormPageState> {
            formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = event.checkList;
 
     },);
-    on<SaveCheckImageToModel>((event, emit) {
-      //log(event.checkList,name: "check list in bloc");
-      //formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = event.checkList;
-        emit(ImageUpdate(event.image));
-    },);
   }
 
-  // Future<void> _onLoadForms(LoadForms event, Emitter<FormState> emit) async {
-  //   emit(FormLoading());
-  //   try {
-  //     final List<String> assets = [
-  //       'assets/forms/form_1.json',
-  //       'assets/forms/form_2.json',
-  //       'assets/forms/form_3.json',
-  //     ];
-  //
-  //     final List<FormModel> forms = [];
-  //     for (final path in assets) {
-  //       final data = await rootBundle.loadString(path);
-  //       final jsonData = json.decode(data);
-  //       forms.add(FormModel.fromJson(jsonData));
-  //     }
-  //     loadedForms = forms;
-  //     emit(FormLoaded(forms));
-  //   } catch (e) {
-  //     emit(FormError("Failed to load forms"));
-  //   }
-  // }
+
 
   void _onSaveAnswer(SaveAnswer event, Emitter<FormPageState> emit) {
-    // emit(FormInitial());
-    //formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties=event.value;
     currentAnswers[event.key] = event.value;
-    // if(event.isMultiSelect)
-    //   {
-    //     formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = "${formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer==""?event.answer.toString():"${formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer},${event.answer}"}";
-    //   }
+
     if(!event.isMultiSelect)
       {
         formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = event.answer.toString();
 
       }
     log(formModel.toJson().toString(),name: "form model data");
-    emit(FormAnswerUpdated(Map.from(currentAnswers)));
+    emit(FormAnswerUpdated(Map.from(currentAnswers),image));
   }
   void _loadCurrentForm(FetchCurrentFormDataEvent event, Emitter<FormPageState> emit) {
     formModel = event.form;

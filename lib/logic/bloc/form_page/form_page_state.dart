@@ -24,7 +24,8 @@ class FormLoaded extends FormPageState {
 
 class FormAnswerUpdated extends FormPageState {
   final Map<String, dynamic> answers;
-  FormAnswerUpdated(this.answers);
+  final File? image;
+  FormAnswerUpdated(this.answers, this.image);
   @override
   List<Object?> get props => [answers];
 }
