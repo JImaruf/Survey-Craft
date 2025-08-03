@@ -58,6 +58,7 @@ class FormPage extends StatelessWidget {
                     if (_formKey.currentState?.validate() ?? false) {
                       _formKey.currentState?.save();
 
+
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => SubmissionViewPage(data: formPageBloc.currentAnswers,modelWithAnswer: formPageBloc.formModel,),));
 
                       //Get.to(() => SubmissionViewPage(data: answers));

@@ -42,7 +42,7 @@ class SubmissionViewPage extends StatelessWidget {
                       Text("${modelWithAnswer.sections![i].fields[j].properties.label} :",style: AppTextStyles.section3,),
 
 
-                      modelWithAnswer.sections![i].fields[j].properties.type=="imageView"?Image.file(File(modelWithAnswer.sections![i].fields[j].properties.answer.toString())):Text(modelWithAnswer.sections![i].fields[j].properties.answer!=""?modelWithAnswer.sections![i].fields[j].properties.answer.toString():"not given",style: AppTextStyles.answer,),
+                      modelWithAnswer.sections![i].fields[j].properties.type=="imageView"?modelWithAnswer.sections![i].fields[j].properties.answer==""?Text("not given",style: AppTextStyles.answer,):Image.file(File(modelWithAnswer.sections![i].fields[j].properties.answer.toString())):Text(modelWithAnswer.sections![i].fields[j].properties.answer!=""?modelWithAnswer.sections![i].fields[j].properties.answer.toString():"not given",style: AppTextStyles.answer,),
                     ],
                   ),
 
