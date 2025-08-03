@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:survey_craft/data/models/form_model.dart';
 
@@ -42,4 +44,10 @@ class SaveCheckListToModel extends FormEvent {
   SaveCheckListToModel({required this.sectionIndex, required this.fieldIndex,required this.checkList,});
   @override
   List<Object?> get props => [sectionIndex,fieldIndex,checkList];
+}
+class SaveCheckImageToModel extends FormEvent {
+  final File image;
+  SaveCheckImageToModel({required this.image});
+  @override
+  List<Object?> get props => [image];
 }

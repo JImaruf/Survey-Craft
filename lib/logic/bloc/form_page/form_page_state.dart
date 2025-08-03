@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 import '../../../data/models/form_model.dart';
@@ -25,6 +27,12 @@ class FormAnswerUpdated extends FormPageState {
   FormAnswerUpdated(this.answers);
   @override
   List<Object?> get props => [answers];
+}
+class ImageUpdate extends FormPageState {
+ final File image;
+  ImageUpdate(this.image);
+  @override
+  List<Object?> get props => [image];
 }
 
 class FormSubmitted extends FormPageState {

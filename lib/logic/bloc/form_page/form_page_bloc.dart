@@ -1,12 +1,8 @@
 
-
-
-
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:survey_craft/data/models/question_answer_model.dart';
+
 import 'package:survey_craft/logic/bloc/form_page/form_page_event.dart';
 
 import '../../../data/models/form_model.dart';
@@ -25,6 +21,11 @@ class FormBloc extends Bloc<FormEvent, FormPageState> {
       log(event.checkList,name: "check list in bloc");
            formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = event.checkList;
 
+    },);
+    on<SaveCheckImageToModel>((event, emit) {
+      //log(event.checkList,name: "check list in bloc");
+      //formModel.sections![event.sectionIndex].fields[event.fieldIndex].properties.answer = event.checkList;
+        emit(ImageUpdate(event.image));
     },);
   }
 
